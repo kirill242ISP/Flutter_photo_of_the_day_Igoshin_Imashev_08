@@ -10,7 +10,7 @@
 * **Версия:** Flutter 3.0+
 * **Язык:** Dart
 * **Платформа:** Web (Google Chrome)
-* **Пакеты:** `http`
+* **Пакеты:** http
 
 ##  Скриншот приложения
 ![Интерфейс приложения](img/step2_Igoshin_Imashev.png)
@@ -18,11 +18,11 @@
 ##  Как запустить
 1. Клонируйте репозиторий:
    ```bash
-   git clone <URL_вашего_репозитория>
+   git clone https://github.com/kirill242ISP/Flutter_photo_of_the_day_Igoshin_Imashev_08.git
    ```
 2. Перейдите в папку с проектом:
    ```bash
-   cd photo_of_the_day
+   cd Flutter_photo_of_the_day_Igoshin_Imashev_08
    ```
 3. Установите зависимости:
    ```bash
