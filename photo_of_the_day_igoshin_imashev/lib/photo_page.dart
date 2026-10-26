@@ -1,27 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Фото дня',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const PhotoPage(),
-    );
-  }
-}
 
 enum PhotoType { dog, landscapes }
 
@@ -33,11 +10,16 @@ class PhotoPage extends StatefulWidget {
 }
 
 class _PhotoPageState extends State<PhotoPage> {
-  final List<String>
-  String? _imageUrl;
-  bool _isLoading = false;
-  String? _errorMessage;
-  PhotoType _animalType = PhotoType.dog;
+  final List<String> _localPhotos = [
+    'assets/images/photo1.jpg',
+    'assets/images/photo2.jpg',
+    'assets/images/photo3.jpg',
+  ];
+
+  String? _imageUrl; 
+  bool _isLoading = false; 
+  String? _errorMessage; 
+  PhotoType _animalType = PhotoType.dog; 
 
   Future<void> _fetchPhoto() async {
     setState(() {
@@ -47,21 +29,14 @@ class _PhotoPageState extends State<PhotoPage> {
     });
 
     try {
-      String url;
-      http.Response response;
+       await Future.delayed(const Duration(seconds: 2));
 
-      if (_animalType == PhotoType.dog) {
-        url = 'https://dog.ceo';
-        response = await http.get(Uri.parse(url));
-        Map<String, dynamic> data = jsonDecode(response.body);
-        _imageUrl = data['message'];
-      } else {
-        final random = DateTime.now().millisecondsSinceEpoch;
-        _imageUrl = 'https://picsum.photos';
-      }
-    } catch (e) {
-      _errorMessage = 'Не удалось загрузить фото.\nПроверьте подключение к интернету.';
-    }
+    final randomIndex = DateTime.now().millisecondsSinceEpoch % _localPhotos.length;
+    
+    _imageUrl = _localPhotos[randomIndex];
+  } catch (e) {
+    _errorMessage = 'Ошибка загрузки фото';
+  }
 
     setState(() {
       _isLoading = false;
@@ -78,11 +53,11 @@ class _PhotoPageState extends State<PhotoPage> {
       body: Column(
         children: [
           const SizedBox(height: 20),
-          _buildAnimalToggle(),
+          _buildAnimalToggle(), 
           const SizedBox(height: 20),
-          _buildContent(),
+          _buildContent(),      // 
           const SizedBox(height: 20),
-          _buildButton(),
+          _buildButton(),       // 
           const SizedBox(height: 20),
         ],
       ),
@@ -108,7 +83,7 @@ class _PhotoPageState extends State<PhotoPage> {
         ),
         const SizedBox(width: 12),
         ChoiceChip(
-          label: const Text('🌲 Пейзаж'),
+          label: const Text('🏞️ Пейзаж'),
           selected: _animalType == PhotoType.landscapes,
           onSelected: (selected) {
             if (selected) {
@@ -127,9 +102,7 @@ class _PhotoPageState extends State<PhotoPage> {
   Widget _buildContent() {
     if (_isLoading) {
       return const Expanded(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: Center(child: CircularProgressIndicator()),
       );
     }
 
@@ -154,7 +127,7 @@ class _PhotoPageState extends State<PhotoPage> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: Image.network(
+            child: Image.asset(
               _imageUrl!,
               fit: BoxFit.cover,
               width: double.infinity,
@@ -176,7 +149,7 @@ class _PhotoPageState extends State<PhotoPage> {
   }
 
   Widget _buildButton() {
-    String label = _animalType == PhotoType.dog ? '🐶 Новая собака' : '🌲 Новый пейзаж';
+    String label = _animalType == PhotoType.dog ? '🐶 Новая собака' : '🏞️ Новый пейзаж';
 
     return ElevatedButton(
       onPressed: _isLoading ? null : _fetchPhoto,
